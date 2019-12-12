@@ -6,3 +6,10 @@ https://study.163.com/course/courseLearn.htm?courseId=1006422014#/learn/video?le
 
 https://github.com/kaitoy/pcap4j
 
+
+macos 
+
+```
+sudo chmod 777 /dev/bdf* 
+
+```
