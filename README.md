@@ -10,6 +10,6 @@ https://github.com/kaitoy/pcap4j
 macos 
 
 ```
-sudo chmod 777 /dev/bdf* 
+sudo chmod 777 /dev/bpf* 
 
 ```
