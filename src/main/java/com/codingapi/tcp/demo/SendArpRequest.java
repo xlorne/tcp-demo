@@ -43,8 +43,8 @@ public class SendArpRequest {
     private SendArpRequest() {}
 
     public static void main(String[] args) throws PcapNativeException, NotOpenException {
-        String strSrcIpAddress = "192.168.1.7"; // for InetAddress.getByName()
-        String strDstIpAddress = "192.168.1.7"; // for InetAddress.getByName()
+        String strSrcIpAddress = "10.0.0.235"; // for InetAddress.getByName()
+        String strDstIpAddress = "10.0.0.160"; // for InetAddress.getByName()
 
         System.out.println(COUNT_KEY + ": " + COUNT);
         System.out.println(READ_TIMEOUT_KEY + ": " + READ_TIMEOUT);

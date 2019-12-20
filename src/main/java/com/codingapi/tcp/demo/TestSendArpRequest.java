@@ -29,16 +29,19 @@ public class TestSendArpRequest {
 
     public static void main(String[] args) throws Exception{
         //本机的网卡设备名称
-        PcapNetworkInterface nif=Pcaps.getDevByName("\\Device\\NPF_{C949EE1C-9B37-48B3-9652-9C35609521C4}");
+//        PcapNetworkInterface nif=Pcaps.getDevByName("\\Device\\NPF_{C949EE1C-9B37-48B3-9652-9C35609521C4}");
+        PcapNetworkInterface nif=Pcaps.getDevByName("en0");
         //本机的IP
-        String localIp= "192.168.1.7";
+        String localIp= "10.0.0.161";
         //本机的MAC地址
-        String deviceMacAddress = "48-8A-D2-43-6A-33";
+//      String deviceMacAddress = "48-8A-D2-43-6A-33";
+        String deviceMacAddress = "78:4f:43:90:44:e8";
+
 
         MacAddress SRC_MAC_ADDR = MacAddress.getByName(deviceMacAddress);
 
         //目标IP
-        String strDstIpAddress ="192.168.1.3";
+        String strDstIpAddress ="10.0.0.245";
         //本机IP
         String strSrcIpAddress =  localIp;
 
