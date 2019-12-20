@@ -3,6 +3,7 @@ package com.codingapi.tcp.ping;
 import lombok.extern.slf4j.Slf4j;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.IpPacket;
+import org.pcap4j.packet.Packet;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,6 +30,10 @@ public class PcapNetworkLayer {
 
     private PcapHandle handle;
 
+    private PcapHandle sendHandle;
+
+    private ExecutorService pool = Executors.newSingleThreadExecutor();
+
     public PcapNetworkLayer() {
         deviceName = "en0";
     }
@@ -41,6 +46,8 @@ public class PcapNetworkLayer {
         PcapNetworkInterface nif= Pcaps.getDevByName(deviceName);
         //网卡监听Handle
         handle = nif.openLive(SNAPLEN, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, READ_TIMEOUT);
+        //创建发送数据包Handle
+        sendHandle = nif.openLive(SNAPLEN, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, READ_TIMEOUT);
 
         //设置监听拦截
         handle.setFilter(
@@ -55,14 +62,24 @@ public class PcapNetworkLayer {
                     }
                 };
         //启动线程拦截数据包
-        ExecutorService pool = Executors.newSingleThreadExecutor();
         Task t = new Task(handle, listener,COUNT);
         pool.execute(t);
+    }
+
+
+    public void send(Packet packet) throws Exception{
+        sendHandle.sendPacket(packet);
     }
 
     public void close(){
         if (handle != null && handle.isOpen()) {
             handle.close();
+        }
+        if (sendHandle != null && sendHandle.isOpen()) {
+            sendHandle.close();
+        }
+        if (pool != null && !pool.isShutdown()) {
+            pool.shutdown();
         }
     }
 
