@@ -3,6 +3,7 @@ package com.codingapi.tcp.ping;
 import lombok.extern.slf4j.Slf4j;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.ArpPacket;
+import org.pcap4j.packet.IpPacket;
 import org.pcap4j.util.MacAddress;
 
 import java.util.concurrent.ExecutorService;
@@ -57,10 +58,11 @@ public class PcapNetworkLayer {
 
         PacketListener listener =
                 packet -> {
-                    if (packet.contains(ArpPacket.class)) {
-                        ArpPacket arp = packet.get(ArpPacket.class);
+                    if (packet.contains(IpPacket.class)) {
+                        IpPacket ipPacket = packet.get(IpPacket.class);
+                        log.info("ipPacket:{}",ipPacket);
                     }
-                    log.info("packet:{}",packet);
+
                 };
         //启动线程拦截数据包
         ExecutorService pool = Executors.newSingleThreadExecutor();
