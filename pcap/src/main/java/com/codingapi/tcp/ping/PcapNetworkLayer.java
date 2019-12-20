@@ -2,12 +2,7 @@ package com.codingapi.tcp.ping;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pcap4j.core.*;
-import org.pcap4j.packet.ArpPacket;
-import org.pcap4j.packet.IcmpV4EchoPacket;
-import org.pcap4j.packet.IcmpV4RedirectPacket;
 import org.pcap4j.packet.IpPacket;
-import org.pcap4j.packet.namednumber.IpNumber;
-import org.pcap4j.util.MacAddress;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,27 +25,20 @@ public class PcapNetworkLayer {
     private static final int SNAPLEN = Integer.getInteger(SNAPLEN_KEY, 65536); // [bytes]
 
 
-    private String deviceName = "en0";
-    private String localIp = "10.0.0.160";
-    private String deviceMacAddress = "78:4f:43:90:44:e8";
+    private String deviceName;
 
     private PcapHandle handle;
 
     public PcapNetworkLayer() {
-
+        deviceName = "en0";
     }
 
-    public PcapNetworkLayer(String deviceName, String localIp, String deviceMacAddress) {
+    public PcapNetworkLayer(String deviceName) {
         this.deviceName = deviceName;
-        this.localIp = localIp;
-        this.deviceMacAddress = deviceMacAddress;
     }
 
     public void start() throws Exception{
         PcapNetworkInterface nif= Pcaps.getDevByName(deviceName);
-        MacAddress SRC_MAC_ADDR = MacAddress.getByName(deviceMacAddress);
-
-
         //网卡监听Handle
         handle = nif.openLive(SNAPLEN, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, READ_TIMEOUT);
 
@@ -61,19 +49,16 @@ public class PcapNetworkLayer {
 
         PacketListener listener =
                 packet -> {
-                    if (packet.contains(IcmpV4EchoPacket.class)) {
-                        IcmpV4EchoPacket ipPacket = packet.get(IcmpV4EchoPacket.class);
-
-                        log.info("ipPacket:{}",ipPacket);
+                    if (packet.contains(IpPacket.class)) {
+                        IpPacket ipPacket = packet.get(IpPacket.class);
+                        log.info("header:\n{}",ipPacket.getHeader());
                     }
-
                 };
         //启动线程拦截数据包
         ExecutorService pool = Executors.newSingleThreadExecutor();
         Task t = new Task(handle, listener,COUNT);
         pool.execute(t);
     }
-
 
     public void close(){
         if (handle != null && handle.isOpen()) {
