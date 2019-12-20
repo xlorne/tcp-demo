@@ -3,7 +3,10 @@ package com.codingapi.tcp.ping;
 import lombok.extern.slf4j.Slf4j;
 import org.pcap4j.core.*;
 import org.pcap4j.packet.ArpPacket;
+import org.pcap4j.packet.IcmpV4EchoPacket;
+import org.pcap4j.packet.IcmpV4RedirectPacket;
 import org.pcap4j.packet.IpPacket;
+import org.pcap4j.packet.namednumber.IpNumber;
 import org.pcap4j.util.MacAddress;
 
 import java.util.concurrent.ExecutorService;
@@ -58,8 +61,9 @@ public class PcapNetworkLayer {
 
         PacketListener listener =
                 packet -> {
-                    if (packet.contains(IpPacket.class)) {
-                        IpPacket ipPacket = packet.get(IpPacket.class);
+                    if (packet.contains(IcmpV4EchoPacket.class)) {
+                        IcmpV4EchoPacket ipPacket = packet.get(IcmpV4EchoPacket.class);
+
                         log.info("ipPacket:{}",ipPacket);
                     }
 

@@ -4,6 +4,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.Arrays;
 
+import Application.HPingApp;
 import Application.PingApp;
 import datalinklayer.DataLinkLayer;
 import jpcap.JpcapCaptor;
@@ -43,11 +44,11 @@ public class ProtocolEntry {
 		   JpcapCaptor jpcap = JpcapCaptor.openDevice(device, 2000, true, 20);
 		   DataLinkLayer linkLayerInstance = DataLinkLayer.getInstance();
 		   linkLayerInstance.initWithOpenDevice(device);
-		   //测试PingApp
+		   //测试HPingApp timestamp 协议消息
 		   String ip = "192.168.2.1";
 		   try {
 			   InetAddress address = InetAddress.getByName(ip);
-			   PingApp pingApp = new PingApp(1, address.getAddress());
+			   PingApp pingApp = new HPingApp(1, address.getAddress());
 			   pingApp.startPing();
 		   } catch(Exception e) {
 			   e.printStackTrace();
